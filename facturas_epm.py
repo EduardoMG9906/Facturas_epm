@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 from datetime import datetime
-from conexion import conectar
 import mysql.connector
 
 def conectar():
