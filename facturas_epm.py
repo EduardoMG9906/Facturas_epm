@@ -28,6 +28,14 @@ if menu == "Datos":
   st.subheader("📂 Datos Generados")
   st.dataframe(data)
   
+# 5. Visualización de Datos
+if menu == "Visualización":
+  st.subheader("📊 Visualización de Datos")
+  fig = sns.boxplot(x="Año", y="Propiedad_Epm", data=data)
+  st.pyplot(fig)
+  
+  
+  
 # # 5. Filtrar por Categoría
 # filtered_data = data  # Asegurar que filtered_data esté definido en todo el script
 # if menu == "Visualización":
