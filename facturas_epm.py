@@ -7,26 +7,7 @@ import plotly.express as px
 from datetime import datetime
 import mysql.connector
 
-def conectar():
-    """Establece la conexión con la base de datos MySQL en XAMPP y devuelve el objeto de conexión."""
-    conn = mysql.connector.connect(
-        host="localhost",
-        user="root",         # Usuario por defecto en XAMPP
-        password="",         # Normalmente sin contraseña en XAMPP
-        database="proyecto"  # Nombre de la base de datos
-    )
-    return conn
-
-# Conectar a la base de datos
-conn = conectar()
-
-# Leer los datos en un DataFrame de Pandas
-query = "SELECT * FROM tarifas_energia"
-df = pd.read_sql(query, conn)
-data = df.copy()
-
-# Cerrar la conexión
-conn.close()
+data = pd.read_csv("Facturas.csv")
 
 st.set_page_config(
   page_title= "Proyecto",
