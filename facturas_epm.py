@@ -32,7 +32,7 @@ if menu == "Datos":
 if menu == "Visualización":
     st.subheader("📊 Visualización de Datos")
     plt.figure(figsize=(10, 6))  # Crea una nueva figura antes del plot
-    ax = sns.boxplot(x="Año", y="Propiedad Epm", data=data)  # Crea el plot en 'ax'
+    ax = sns.boxplot(x="Año", y="Compartido", data=data)  # Crea el plot en 'ax'
     fig = ax.get_figure()  # Obtiene la figura de 'ax'
     st.pyplot(fig)  # Muestra la figura en Streamlit
   
