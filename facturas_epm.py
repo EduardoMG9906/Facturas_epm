@@ -31,7 +31,7 @@ if menu == "Datos":
 # 5. Visualización de Datos
 if menu == "Visualización":
   st.subheader("📊 Visualización de Datos")
-  fig = sns.boxplot(x="Año", y="Propiedad_Epm", data=data)
+  fig = sns.boxplot(x="Año", y="Propiedad Epm", data=data)
   st.pyplot(fig)
   
   
