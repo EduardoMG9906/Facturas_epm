@@ -25,14 +25,16 @@ menu = st.sidebar.radio(
 
 # 4. Mostrar los Datos
 if menu == "Datos":
-  st.subheader("📂 Datos Generados")
-  st.dataframe(data)
+    st.subheader("📂 Datos Generados")
+    st.dataframe(data)
   
 # 5. Visualización de Datos
 if menu == "Visualización":
-  st.subheader("📊 Visualización de Datos")
-  fig = sns.boxplot(x="Año", y="Propiedad Epm", data=data)
-  st.pyplot(fig)
+    st.subheader("📊 Visualización de Datos")
+    plt.figure(figsize=(10, 6))  # Crea una nueva figura antes del plot
+    ax = sns.boxplot(x="Año", y="Propiedad_Epm", data=data)  # Crea el plot en 'ax'
+    fig = ax.get_figure()  # Obtiene la figura de 'ax'
+    st.pyplot(fig)  # Muestra la figura en Streamlit
   
   
   
