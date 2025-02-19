@@ -7,19 +7,21 @@ import plotly.express as px
 from datetime import datetime
 import mysql.connector
 
-# Initialize connection.
-conn = st.connection('mysql', type='sql')
+# # Initialize connection.
+# conn = st.connection('mysql', type='sql')
 
-# Perform query.
-data = conn.query('SELECT * from tarifas_energia;', ttl=600)
+# # Perform query.
+# data = conn.query('SELECT * from tarifas_energia;', ttl=600)
 
-st.set_page_config(
-  page_title= "Proyecto",
-  layout="wide"
-)
+# st.set_page_config(
+#   page_title= "Proyecto",
+#   layout="wide"
+# )
 
-st.title(" 📄 Facturas EPM")
-st.sidebar.title("Opciones de Navegacion")
+# st.title(" 📄 Facturas EPM")
+# st.sidebar.title("Opciones de Navegacion")
+
+data = pd.read_csv("tarifas_epm_limpio.csv")
 
 st.set_page_config(
   page_title= "Proyecto",
