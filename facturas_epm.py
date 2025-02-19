@@ -21,7 +21,7 @@ import mysql.connector
 # st.title(" 📄 Facturas EPM")
 # st.sidebar.title("Opciones de Navegacion")
 
-data = pd.read_csv("tarifas_epm_limpio.csv")
+data = pd.read_csv("Tarifas_epm_limpio.csv")
 
 st.set_page_config(
   page_title= "Proyecto",
