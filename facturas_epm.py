@@ -7,7 +7,19 @@ import plotly.express as px
 from datetime import datetime
 import mysql.connector
 
-data = pd.read_csv("Tarifas_epm_limpio.csv")
+# Initialize connection.
+conn = st.connection('mysql', type='sql')
+
+# Perform query.
+data = conn.query('SELECT * from tarifas_energia;', ttl=600)
+
+st.set_page_config(
+  page_title= "Proyecto",
+  layout="wide"
+)
+
+st.title(" 📄 Facturas EPM")
+st.sidebar.title("Opciones de Navegacion")
 
 st.set_page_config(
   page_title= "Proyecto",
