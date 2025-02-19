@@ -7,7 +7,7 @@ import plotly.express as px
 from datetime import datetime
 import mysql.connector
 
-data = pd.read_csv("Facturas.csv")
+data = pd.read_csv("Tarifas_epm_limpio.csv")
 
 st.set_page_config(
   page_title= "Proyecto",
