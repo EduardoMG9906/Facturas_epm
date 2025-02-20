@@ -87,7 +87,8 @@ if sql_file:
 
         # Cerrar la conexión
         conn.close()
-        
+
+filtered_data = df
 if menu == "Visualización":
     st.subheader("📊 Visualización de Datos")
     categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
