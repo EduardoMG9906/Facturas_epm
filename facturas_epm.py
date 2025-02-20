@@ -34,8 +34,8 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📊 Dashboard Interactivo con Streamlit")
-st.sidebar.title("🔍 Opciones de Navegación")
+st.title("📊 ")
+st.sidebar.title("🔍 Navegación")
 
 # 3. Implementación de la Barra de Navegación
 menu = st.sidebar.radio(
@@ -43,39 +43,40 @@ menu = st.sidebar.radio(
     ["Inicio", "Datos", "Visualización", "Configuración"]
 )
 
-# Crear la base de datos SQLite en memoria
+
 if sql_file:
-    conn = sqlite3.connect(":memory:")
-    cursor = conn.cursor()
+    if menu == "Datos":
+        conn = sqlite3.connect(":memory:")
+        cursor = conn.cursor()
 
-    # Leer el contenido del archivo SQL
-    with open(sql_file, "r", encoding="utf-8") as file:
-        sql_script = file.read()
+        # Leer el contenido del archivo SQL
+        with open(sql_file, "r", encoding="utf-8") as file:
+            sql_script = file.read()
 
-    # Ejecutar las sentencias SQL
-    cursor.executescript(sql_script)
-    conn.commit()
+        # Ejecutar las sentencias SQL
+        cursor.executescript(sql_script)
+        conn.commit()
 
-    # Obtener nombres de las tablas
-    tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
-    st.write("### 📌 Tablas disponibles en la base de datos:")
-    st.write(tables)
+        # Obtener nombres de las tablas
+        tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
+        st.write("### 📌 Tablas disponibles en la base de datos:")
+        st.write(tables)
 
-    # Selección de tabla para visualizar
-    table_name = st.selectbox("Selecciona una tabla para ver los datos:", tables["name"])
+        # Selección de tabla para visualizar
+        table_name = st.selectbox("Selecciona una tabla para ver los datos:", tables["name"])
 
-    if table_name:
-        # Cargar los datos en un DataFrame
-        df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
-        st.write(f"### 📊 Datos de la tabla `{table_name}`")
-        st.dataframe(df)
+        if table_name:
+            # Cargar los datos en un DataFrame
+            df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
+            st.write(f"### 📊 Datos de la tabla `{table_name}`")
+            st.dataframe(df)
 
-        # Opción para descargar los datos en CSV
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
+            # Opción para descargar los datos en CSV
+            csv = df.to_csv(index=False).encode("utf-8")
+            st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
 
-    # Cerrar la conexión
-    conn.close()
+        # Cerrar la conexión
+        conn.close()
 
 
   
