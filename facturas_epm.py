@@ -4,13 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-from datetime import datetime}
+from datetime import datetime
 import sqlite3
 import requests
 import os
 
 # URL del archivo SQL en GitHub (reemplaza con tu enlace)
-GITHUB_SQL_URL = "https://raw.githubusercontent.com/jipadilla7/tools-streamlit-tt2/refs/heads/main/medio_ambiente_colombia.sql"
+GITHUB_SQL_URL = "https://github.com/EduardoMG9906/Facturas_epm/blob/main/proyecto.sql"
 
 # Función para descargar y guardar el archivo SQL
 def descargar_sql(url, filename="database.sql"):
@@ -62,32 +62,32 @@ if sql_file:
 
 df
 
-#data = pd.read_csv("Tarifas_epm_limpio.csv")
+# #data = pd.read_csv("Tarifas_epm_limpio.csv")
 
-st.set_page_config(
-  page_title= "Proyecto",
-  layout="wide"
-)
+# st.set_page_config(
+#   page_title= "Proyecto",
+#   layout="wide"
+# )
 
-st.title(" 📄 Facturas EPM")
-st.sidebar.title("Opciones de Navegacion")
+# st.title(" 📄 Facturas EPM")
+# st.sidebar.title("Opciones de Navegacion")
 
-# 3. Implementación de la Barra de Navegación
-menu = st.sidebar.radio(
-    "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización", "Configuración"]
-)
+# # 3. Implementación de la Barra de Navegación
+# menu = st.sidebar.radio(
+#     "Selecciona una opción:",
+#     ["Inicio", "Datos", "Visualización", "Configuración"]
+# )
 
-# 4. Mostrar los Datos
-if menu == "Datos":
-    st.subheader("📂 Datos Generados")
-    st.dataframe(data, use_container_width=True)
+# # 4. Mostrar los Datos
+# if menu == "Datos":
+#     st.subheader("📂 Datos Generados")
+#     st.dataframe(data, use_container_width=True)
   
-# 5. Visualización de Datos
-if menu == "Visualización":
-    st.subheader("📊 Visualización de Datos")
-    plt.figure(figsize=(10, 6))  # Crea una nueva figura antes del plot
-    ax = sns.boxplot(x="Año", y="Compartido", data=data)  # Crea el plot en 'ax'
-    fig = ax.get_figure()  # Obtiene la figura de 'ax'
-    st.pyplot(fig)  # Muestra la figura en Streamlit
+# # 5. Visualización de Datos
+# if menu == "Visualización":
+#     st.subheader("📊 Visualización de Datos")
+#     plt.figure(figsize=(10, 6))  # Crea una nueva figura antes del plot
+#     ax = sns.boxplot(x="Año", y="Compartido", data=data)  # Crea el plot en 'ax'
+#     fig = ax.get_figure()  # Obtiene la figura de 'ax'
+#     st.pyplot(fig)  # Muestra la figura en Streamlit
   
