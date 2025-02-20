@@ -34,7 +34,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📊 ")
+st.title("📊 Analisis de Facturas EPM")
 st.sidebar.title("🔍 Navegación")
 
 # 3. Implementación de la Barra de Navegación
@@ -43,6 +43,11 @@ menu = st.sidebar.radio(
     ["Inicio", "Datos", "Visualización", "Configuración"]
 )
 
+if menu == "Inicio":
+    st.write("""
+    # Dashboard Interactivo
+    Bienvenido a la aplicación de visualización de datos. Utiliza el menú de la izquierda para navegar entre las diferentes secciones.
+    """)
 
 if sql_file:
     if menu == "Datos":
