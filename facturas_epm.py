@@ -62,6 +62,16 @@ if menu == "Inicio":
     - Es necesario desarrollar una herramienta que brinde información clara y accesible sobre las tarifas eléctricas.
     - Esto permitirá a los consumidores conocer los factores que afectan sus costos y tomar mejores decisiones en su consumo energético.
 
+    # Objetivo general:
+    
+    -Desarrollar un análisis detallado de las tarifas eléctricas de EPM del año 2016 al 2022 en el area metropolitana, identificando patrones y tendencias que promuevan la toma de decisiones informadas por parte de los usuarios y optimicen el consumo energético.
+
+    # Objetivos especificos:
+    
+    - Analizar la variabilidad de tarifas según tipo de tarifa, consumo y propiedad del servicio.
+    - Identificar tendencias y patrones en los cambios de tarifas a lo largo del tiempo.
+    - Desarrollar una herramienta de visualización para que los usuarios comprendan sus costos de energía y cómo optimizarlos.
+
     """)
 
 if sql_file:
