@@ -1,4 +1,4 @@
-s
+
 
 CREATE TABLE tarifas_epm_limpio (
   Tipo de Información VARCHAR(7) DEFAULT NULL,

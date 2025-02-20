@@ -10,7 +10,7 @@ import requests
 import os
 
 # URL del archivo SQL en GitHub (reemplaza con tu enlace)
-GITHUB_SQL_URL = "https://github.com/EduardoMG9906/Facturas_epm/blob/main/proyecto.sql"
+GITHUB_SQL_URL = "https://raw.githubusercontent.com/EduardoMG9906/Facturas_epm/refs/heads/main/proyecto.sql"
 
 # Función para descargar y guardar el archivo SQL
 def descargar_sql(url, filename="database.sql"):
