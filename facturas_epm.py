@@ -43,7 +43,7 @@ menu = st.sidebar.radio(
     ["Visualización", "Introducción", "Datos",]
 )
 
-if menu == "Inicio":
+if menu == "Introducción":
     st.write("""
              
     # Introducción
@@ -86,15 +86,17 @@ if sql_file:
             st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
 
         # Cerrar la conexión
+        filtered_data = df
+        if menu == "Visualización":
+            st.subheader("📊 Visualización de Datos")
+            categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
+            filtered_data = df[df["Tipo de Dato"] == categoria]
+            st.write(f"Mostrando datos para la categoría {categoria}")
+            st.dataframe(filtered_data)
+        
         conn.close()
 
-filtered_data = df
-if menu == "Visualización":
-    st.subheader("📊 Visualización de Datos")
-    categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
-    filtered_data = df[df["Tipo de Dato"] == categoria]
-    st.write(f"Mostrando datos para la categoría {categoria}")
-    st.dataframe(filtered_data)
+
   
         
 
