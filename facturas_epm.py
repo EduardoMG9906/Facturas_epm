@@ -86,7 +86,7 @@ if sql_file:
             st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
 
         # Cerrar la conexión
-        filtered_data = df
+
         if menu == "Visualización":
             st.subheader("📊 Visualización de Datos")
             categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
