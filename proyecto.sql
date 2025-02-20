@@ -1,18 +1,18 @@
 s
 
-CREATE TABLE `tarifas_epm_limpio` (
-  `Tipo de Información` varchar(7) DEFAULT NULL,
-  `Tipo de Tarifa` varchar(14) DEFAULT NULL,
-  `Tipo de Dato` varchar(22) DEFAULT NULL,
-  `Rango de Consumo` varchar(15) DEFAULT NULL,
-  `Nivel` varchar(1) DEFAULT NULL,
-  `Propiedad Epm` decimal(5,2) DEFAULT NULL,
-  `Compartido` decimal(5,2) DEFAULT NULL,
-  `Propiedad del Cliente` decimal(5,2) DEFAULT NULL,
-  `Punta` decimal(3,2) DEFAULT NULL,
-  `Fuera de Punta` decimal(3,2) DEFAULT NULL,
-  `Año` decimal(5,1) DEFAULT NULL,
-  `Mes` varchar(10) DEFAULT NULL
+CREATE TABLE tarifas_epm_limpio (
+  Tipo de Información VARCHAR(7) DEFAULT NULL,
+  Tipo de Tarifa VARCHAR(14) DEFAULT NULL,
+  Tipo de Dato VARCHAR(22) DEFAULT NULL,
+  Rango de Consumo VARCHAR(15) DEFAULT NULL,
+  Nivel VARCHAR(1) DEFAULT NULL,
+  Propiedad Epm FLOAT(5,2) DEFAULT NULL,
+  Compartido FLOAT(5,2) DEFAULT NULL,
+  Propiedad del Cliente FLOAT(5,2) DEFAULT NULL,
+  Punta FLOAT(3,2) DEFAULT NULL,
+  Fuera de Punta FLOAT(3,2) DEFAULT NULL,
+  Año FLOAT(5,1) DEFAULT NULL,
+  Mes VARCHAR(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
