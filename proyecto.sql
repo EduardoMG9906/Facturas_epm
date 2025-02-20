@@ -13,11 +13,8 @@ CREATE TABLE tarifas_epm_limpio (
   Fuera de Punta FLOAT(3,2) DEFAULT NULL,
   Año FLOAT(5,1) DEFAULT NULL,
   Mes VARCHAR(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+);
 
---
--- Volcado de datos para la tabla `tarifas_epm_limpio`
---
 
 INSERT INTO tarifas_epm_limpio (Tipo de Información, Tipo de Tarifa, Tipo de Dato, Rango de Consumo, Nivel, Propiedad Epm, Compartido, Propiedad del Cliente, Punta, Fuera de Punta, Año, Mes) VALUES
 ('Monomia', 'Residencial', 'Estrato 1', 'Rango 0 - CS', 'I', 228.08, 218.81, 209.54, 0.00, 0.00, 2020.0, 'Diciembre'),
