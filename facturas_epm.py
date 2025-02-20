@@ -26,6 +26,23 @@ def descargar_sql(url, filename="database.sql"):
 # Descargar el archivo SQL
 sql_file = descargar_sql(GITHUB_SQL_URL)
 
+
+# 1. Configuración inicial de la aplicación
+st.set_page_config(
+    page_title="Dashboard Interactivo",
+    page_icon="📊",
+    layout="wide"
+)
+
+st.title("📊 Dashboard Interactivo con Streamlit")
+st.sidebar.title("🔍 Opciones de Navegación")
+
+# 3. Implementación de la Barra de Navegación
+menu = st.sidebar.radio(
+    "Selecciona una opción:",
+    ["Inicio", "Datos", "Visualización", "Configuración"]
+)
+
 # Crear la base de datos SQLite en memoria
 if sql_file:
     conn = sqlite3.connect(":memory:")
