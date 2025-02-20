@@ -7,6 +7,7 @@ import plotly.express as px
 from datetime import datetime
 import sqlite3
 import requests
+import altair as alt
 import os
 
 # URL del archivo SQL en GitHub (reemplaza con tu enlace)
@@ -40,61 +41,118 @@ st.sidebar.title("🔍 Navegación")
 # 3. Implementación de la Barra de Navegación
 menu = st.sidebar.radio(
     "Selecciona una opción:",
-    ["Visualización", "Introducción", "Datos",]
+    ["Introducción","Visualización", "Datos",]
 )
 
-if menu == "Introducción":
-    st.write("""
-             
-    # Introducción
-         
-    El costo de la energía eléctrica es un factor determinante en la planificación financiera de hogares y empresas. 
-    Sin embargo, la variabilidad de las tarifas según el tipo de cliente, el consumo y otros factores puede dificultar la toma de decisiones informadas. 
-    Este proyecto tiene como objetivo analizar las tarifas eléctricas de EPM en el área metropolitana entre 2016 y 2022, identificando patrones y tendencias que permitan optimizar el consumo energético. 
-    A través del desarrollo de una herramienta de visualización, se busca brindar información clara y accesible para que los usuarios comprendan sus costos y tomen decisiones más eficientes en el uso de la energía.
-    """)    
-
 if sql_file:
-    if menu == "Datos":
-        conn = sqlite3.connect(":memory:")
-        cursor = conn.cursor()
+    
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
 
-        # Leer el contenido del archivo SQL
-        with open(sql_file, "r", encoding="utf-8") as file:
-            sql_script = file.read()
+    # Leer el contenido del archivo SQL
+    with open(sql_file, "r", encoding="utf-8") as file:
+        sql_script = file.read()
 
-        # Ejecutar las sentencias SQL
-        cursor.executescript(sql_script)
-        conn.commit()
+    # Ejecutar las sentencias SQL
+    cursor.executescript(sql_script)
+    conn.commit()
 
-        # Obtener nombres de las tablas
-        tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
-        st.write("### 📌 Tablas disponibles en la base de datos:")
-        st.write(tables)
+    # Obtener nombres de las tablas
+    #tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
+    df = pd.read_sql(f"SELECT * FROM tarifas_epm_limpio", conn)
+    
+    df['Año'] = df['Año'].astype(int)
+    df["Rango de Consumo"] = df["Rango de Consumo"].replace('0-CS','Rango 0 - CS')
+    df["Rango de Consumo"] = df["Rango de Consumo"].replace('Mayor CS','Rango > CS')
+    
+    if menu == "Introducción":
+        st.write("""
+                
+        # Introducción
+            
+        El costo de la energía eléctrica es un factor determinante en la planificación financiera de hogares y empresas. 
+        Sin embargo, la variabilidad de las tarifas según el tipo de cliente, el consumo y otros factores puede dificultar la toma de decisiones informadas. 
+        Este proyecto tiene como objetivo analizar las tarifas eléctricas de EPM en el área metropolitana entre 2016 y 2022, identificando patrones y tendencias que permitan optimizar el consumo energético. 
+        A través del desarrollo de una herramienta de visualización, se busca brindar información clara y accesible para que los usuarios comprendan sus costos y tomen decisiones más eficientes en el uso de la energía.
+        """)    
 
-        # Selección de tabla para visualizar
-        table_name = st.selectbox("Selecciona una tabla para ver los datos:", tables["name"])
-
-        if table_name:
-            # Cargar los datos en un DataFrame
-            df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
-            st.write(f"### 📊 Datos de la tabla `{table_name}`")
-            st.dataframe(df)
-
-            # Opción para descargar los datos en CSV
-            csv = df.to_csv(index=False).encode("utf-8")
-            st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
-
-        # Cerrar la conexión
-
-        if menu == "Visualización":
-            st.subheader("📊 Visualización de Datos")
-            categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
-            filtered_data = df[df["Tipo de Dato"] == categoria]
-            st.write(f"Mostrando datos para la categoría {categoria}")
-            st.dataframe(filtered_data)
+    elif menu == "Datos":
         
-        conn.close()
+        st.write("# Datos")
+        
+        st.write(f"### 📊 Datos de la tabla `")        
+        st.dataframe(df)
+
+        # Opción para descargar los datos en CSV
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
+    
+    # filtered_data = df
+    
+    elif menu == "Visualización":
+        st.subheader("📊 Visualización de Datos")
+        # Agregar opción "Todos" a la lista de categorías
+        categorias = ["Todos"] + list(df["Tipo de Dato"].unique())
+        
+        categoria = st.selectbox("Selecciona una categoría", categorias)
+        
+        # Filtrar datos si se selecciona una categoría específica
+        if categoria == "Todos":
+            filtered_data = df.copy()  # No aplicar filtro
+        else:
+            filtered_data = df[df["Tipo de Dato"] == categoria]
+
+        filtered_data["Año"] = pd.to_numeric(filtered_data["Año"], errors="coerce")
+        filtered_data["Compartido"] = pd.to_numeric(filtered_data["Compartido"], errors="coerce")
+        
+        st.write("## Gráficos")
+        
+        col1, col2 = st.columns(2)
+        with col1: 
+            st.write(f"### Gráfico de barras para el valor de la tarifa promedio por año para {categoria}")
+
+            # Calcular el promedio por año
+            df_mean = filtered_data.groupby("Año", as_index=False)["Compartido"].mean()
+            
+
+            # Crear el gráfico
+            fig = px.box(
+                filtered_data, 
+                x="Año", 
+                y="Compartido", 
+                labels={"Compartido": "Tarifa Promedio", "Año": "Año"},
+                color_discrete_sequence=["#3498db"]
+            )
+            
+            st.plotly_chart(fig)
+
+            st.write(f"### Histograma para ver el comportamiento del valor de la energia por estrato y año para {categoria}")
+
+            # Crear el gráfico de líneas con Plotly
+            fig_2 = px.histogram(
+                filtered_data, 
+                x="Tipo de Dato", 
+                y="Compartido", 
+                color="Año",  # Equivalente a hue en Seaborn
+                barmode= "group",  # Añade puntos en las líneas
+                #labels={"Tipo de Dato": "Categoría", "Compartido": "Tarifa Promedio", "Año": "Año"}
+            )
+            st.plotly_chart(fig_2)
+        
+        with col2:
+            st.write(f"### Gráfico de dispersión para los rangos del valor de la tarifa  por año para {categoria}")
+            fig_3 = px.scatter(
+                filtered_data, 
+                x="Rango de Consumo",
+                y="Tipo de Dato",  
+                color="Tipo de Información",  # Equivalente a hue en Seaborn
+                size = "Compartido",  
+                #title=f"  {categoria}",
+                #labels={"Tipo de Dato": "Categoría", "Compartido": "Tarifa Promedio", "Año": "Año"}
+            )
+            st.plotly_chart(fig_3)
+
+    conn.close()
 
 
   
