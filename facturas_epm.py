@@ -40,7 +40,7 @@ st.sidebar.title("🔍 Navegación")
 # 3. Implementación de la Barra de Navegación
 menu = st.sidebar.radio(
     "Selecciona una opción:",
-    ["Inicio", "Datos", "Visualización", "Configuración"]
+    ["Visualización", "Introducción", "Datos",]
 )
 
 if menu == "Inicio":
@@ -48,31 +48,11 @@ if menu == "Inicio":
              
     # Introducción
          
-    # Problematica
-    - Las tarifas de energía eléctrica varían según diversos factores.
-    - El impacto de estas variaciones no siempre es claro, lo que dificulta la planificación financiera y la toma de decisiones informadas por parte de los consumidores.
-    
-    # Interes:
-    
-    - El análisis de tarifas eléctricas ayudará a comprender cómo fluctúan los costos dependiendo del consumo y tipo de cliente.
-    - Permitirá diseñar estrategias para optimizar el consumo, mejorar la eficiencia y reducir costos.
-
-    # Necesidad:
-    
-    - Es necesario desarrollar una herramienta que brinde información clara y accesible sobre las tarifas eléctricas.
-    - Esto permitirá a los consumidores conocer los factores que afectan sus costos y tomar mejores decisiones en su consumo energético.
-
-    # Objetivo general:
-    
-    -Desarrollar un análisis detallado de las tarifas eléctricas de EPM del año 2016 al 2022 en el area metropolitana, identificando patrones y tendencias que promuevan la toma de decisiones informadas por parte de los usuarios y optimicen el consumo energético.
-
-    # Objetivos especificos:
-    
-    - Analizar la variabilidad de tarifas según tipo de tarifa, consumo y propiedad del servicio.
-    - Identificar tendencias y patrones en los cambios de tarifas a lo largo del tiempo.
-    - Desarrollar una herramienta de visualización para que los usuarios comprendan sus costos de energía y cómo optimizarlos.
-
-    """)
+    El costo de la energía eléctrica es un factor determinante en la planificación financiera de hogares y empresas. 
+    Sin embargo, la variabilidad de las tarifas según el tipo de cliente, el consumo y otros factores puede dificultar la toma de decisiones informadas. 
+    Este proyecto tiene como objetivo analizar las tarifas eléctricas de EPM en el área metropolitana entre 2016 y 2022, identificando patrones y tendencias que permitan optimizar el consumo energético. 
+    A través del desarrollo de una herramienta de visualización, se busca brindar información clara y accesible para que los usuarios comprendan sus costos y tomen decisiones más eficientes en el uso de la energía.
+    """)    
 
 if sql_file:
     if menu == "Datos":
@@ -107,6 +87,15 @@ if sql_file:
 
         # Cerrar la conexión
         conn.close()
+        
+if menu == "Visualización":
+    st.subheader("📊 Visualización de Datos")
+    categoria = st.sidebar.selectbox("Selecciona una categoría", df["Tipo de Dato"].unique())
+    filtered_data = df[df["Tipo de Dato"] == categoria]
+    st.write(f"Mostrando datos para la categoría {categoria}")
+    st.dataframe(filtered_data)
+  
+        
 
 
   
