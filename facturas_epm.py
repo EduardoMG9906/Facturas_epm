@@ -34,7 +34,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("📊 Analisis de Facturas EPM")
+st.title("📄 Proyecto Analisis de Facturas EPM")
 st.sidebar.title("🔍 Navegación")
 
 # 3. Implementación de la Barra de Navegación
@@ -45,8 +45,23 @@ menu = st.sidebar.radio(
 
 if menu == "Inicio":
     st.write("""
-    # Dashboard Interactivo
-    Bienvenido a la aplicación de visualización de datos. Utiliza el menú de la izquierda para navegar entre las diferentes secciones.
+             
+    # Introducción
+         
+    # Problematica
+    - Las tarifas de energía eléctrica varían según diversos factores.
+    - El impacto de estas variaciones no siempre es claro, lo que dificulta la planificación financiera y la toma de decisiones informadas por parte de los consumidores.
+    
+    # Interes:
+    
+    - El análisis de tarifas eléctricas ayudará a comprender cómo fluctúan los costos dependiendo del consumo y tipo de cliente.
+    - Permitirá diseñar estrategias para optimizar el consumo, mejorar la eficiencia y reducir costos.
+
+    # Necesidad:
+    
+    - Es necesario desarrollar una herramienta que brinde información clara y accesible sobre las tarifas eléctricas.
+    - Esto permitirá a los consumidores conocer los factores que afectan sus costos y tomar mejores decisiones en su consumo energético.
+
     """)
 
 if sql_file:
