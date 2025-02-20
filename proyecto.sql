@@ -19,7 +19,7 @@ CREATE TABLE tarifas_epm_limpio (
 -- Volcado de datos para la tabla `tarifas_epm_limpio`
 --
 
-INSERT INTO `tarifas_epm_limpio` (`Tipo de Información`, `Tipo de Tarifa`, `Tipo de Dato`, `Rango de Consumo`, `Nivel`, `Propiedad Epm`, `Compartido`, `Propiedad del Cliente`, `Punta`, `Fuera de Punta`, `Año`, `Mes`) VALUES
+INSERT INTO tarifas_epm_limpio (Tipo de Información, Tipo de Tarifa, Tipo de Dato, Rango de Consumo, Nivel, Propiedad Epm, Compartido, Propiedad del Cliente, Punta, Fuera de Punta, Año, Mes) VALUES
 ('Monomia', 'Residencial', 'Estrato 1', 'Rango 0 - CS', 'I', 228.08, 218.81, 209.54, 0.00, 0.00, 2020.0, 'Diciembre'),
 ('Monomia', 'Residencial', 'Estrato 1', 'Rango > CS', 'I', 570.20, 547.02, 523.85, 0.00, 0.00, 2020.0, 'Diciembre'),
 ('Monomia', 'Residencial', 'Estrato 2', 'Rango 0 - CS', 'I', 285.10, 273.51, 261.92, 0.00, 0.00, 2020.0, 'Diciembre'),
