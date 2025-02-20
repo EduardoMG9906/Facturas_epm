@@ -711,8 +711,4 @@ INSERT INTO `tarifas_epm_limpio` (`Tipo de Información`, `Tipo de Tarifa`, `Tip
 ('Monomia', 'No Residencial', 'Industrial y Comercial', 'Rango monomia', 'I', 680.83, 653.16, 625.49, 0.00, 0.00, 2020.0, 'Noviembre'),
 ('Horaria', 'No Residencial', 'Industrial y Comercial', 'Punta', 'I', 682.53, 654.86, 627.19, 0.00, 0.00, 2020.0, 'Noviembre'),
 ('Horaria', 'No Residencial', 'Industrial y Comercial', 'Fuera de Punta', 'I', 680.60, 652.93, 625.26, 0.00, 0.00, 2020.0, 'Noviembre');
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
