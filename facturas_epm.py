@@ -60,7 +60,5 @@ if sql_file:
     # Cerrar la conexión
     conn.close()
 
-df
-
 
   
