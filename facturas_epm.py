@@ -4,10 +4,65 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-from datetime import datetime
-import mysql.connector
+from datetime import datetime}
+import sqlite3
+import requests
+import os
 
-data = pd.read_csv("Tarifas_epm_limpio.csv")
+# URL del archivo SQL en GitHub (reemplaza con tu enlace)
+GITHUB_SQL_URL = "https://raw.githubusercontent.com/jipadilla7/tools-streamlit-tt2/refs/heads/main/medio_ambiente_colombia.sql"
+
+# Función para descargar y guardar el archivo SQL
+def descargar_sql(url, filename="database.sql"):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(filename, "wb") as file:
+            file.write(response.content)
+        return filename
+    else:
+        st.error("⚠️ Error al descargar el archivo SQL desde GitHub.")
+        return None
+
+# Descargar el archivo SQL
+sql_file = descargar_sql(GITHUB_SQL_URL)
+
+# Crear la base de datos SQLite en memoria
+if sql_file:
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
+
+    # Leer el contenido del archivo SQL
+    with open(sql_file, "r", encoding="utf-8") as file:
+        sql_script = file.read()
+
+    # Ejecutar las sentencias SQL
+    cursor.executescript(sql_script)
+    conn.commit()
+
+    # Obtener nombres de las tablas
+    tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
+    st.write("### 📌 Tablas disponibles en la base de datos:")
+    st.write(tables)
+
+    # Selección de tabla para visualizar
+    table_name = st.selectbox("Selecciona una tabla para ver los datos:", tables["name"])
+
+    if table_name:
+        # Cargar los datos en un DataFrame
+        df = pd.read_sql(f"SELECT * FROM {table_name}", conn)
+        st.write(f"### 📊 Datos de la tabla `{table_name}`")
+        st.dataframe(df)
+
+        # Opción para descargar los datos en CSV
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
+
+    # Cerrar la conexión
+    conn.close()
+
+df
+
+#data = pd.read_csv("Tarifas_epm_limpio.csv")
 
 st.set_page_config(
   page_title= "Proyecto",
@@ -36,31 +91,3 @@ if menu == "Visualización":
     fig = ax.get_figure()  # Obtiene la figura de 'ax'
     st.pyplot(fig)  # Muestra la figura en Streamlit
   
-  
-  
-# # 5. Filtrar por Categoría
-# filtered_data = data  # Asegurar que filtered_data esté definido en todo el script
-# if menu == "Visualización":
-#     st.subheader("📊 Visualización de Datos")
-#     categoria = st.sidebar.selectbox("Selecciona una categoría", data["Categoría"].unique())
-#     filtered_data = data[data["Categoría"] == categoria]
-#     st.write(f"Mostrando datos para la categoría {categoria}")
-#     st.dataframe(filtered_data)
-
-    # # 6. Filtrar por Ventas
-    # ventas_min, ventas_max = st.sidebar.slider(
-    #     "Selecciona el rango de ventas:",
-    #     min_value=int(data["Ventas"].min()),
-    #     max_value=int(data["Ventas"].max()),
-    #     value=(int(data["Ventas"].min()), int(data["Ventas"].max()))
-    # )
-    # filtered_data = filtered_data[(filtered_data["Ventas"] >= ventas_min) & (filtered_data["Ventas"] <= ventas_max)]
-
-    # # 7. Filtrar por Fecha
-    # fecha_inicio, fecha_fin = st.sidebar.date_input(
-    #     "Selecciona el rango de fechas:",
-    #     [data["Fecha"].min(), data["Fecha"].max()],
-    #     min_value=data["Fecha"].min(),
-    #     max_value=data["Fecha"].max()
-    # )
-    # filtered_data = filtered_data[(filtered_data["Fecha"] >= pd.to_datetime(fecha_inicio)) & (filtered_data["Fecha"] <= pd.to_datetime(fecha_fin))]
