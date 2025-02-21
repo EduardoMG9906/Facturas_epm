@@ -1,4 +1,6 @@
 import streamlit as st
+from streamlit_lottie import st_lottie
+from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,6 +29,11 @@ def descargar_sql(url, filename="database.sql"):
 # Descargar el archivo SQL
 sql_file = descargar_sql(GITHUB_SQL_URL)
 
+def load_lottieurl(url: str):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
 # 1. Configuración inicial de la aplicación
 st.set_page_config(
@@ -36,13 +43,15 @@ st.set_page_config(
 )
 
 st.title("📄 Proyecto Analisis de Facturas EPM")
-st.sidebar.title("🔍 Navegación")
+# st.sidebar.title("🔍 Paginas")
 
-# 3. Implementación de la Barra de Navegación
-menu = st.sidebar.radio(
-    "Selecciona una opción:",
-    ["Introducción","Visualización", "Datos",]
-)
+# # 3. Implementación de la Barra de Navegación
+# menu = st.sidebar.radio(
+#     "",
+#     ["Introducción","Visualización", "Datos"]
+# )
+
+Introduccion, Visualizacion, Datos = st.tabs(["Introducción","Visualización", "Datos"])
 
 if sql_file:
     
@@ -65,18 +74,24 @@ if sql_file:
     df["Rango de Consumo"] = df["Rango de Consumo"].replace('0-CS','Rango 0 - CS')
     df["Rango de Consumo"] = df["Rango de Consumo"].replace('Mayor CS','Rango > CS')
     
-    if menu == "Introducción":
-        st.write("""
-                
-        # Introducción
-            
-        El costo de la energía eléctrica es un factor determinante en la planificación financiera de hogares y empresas. 
-        Sin embargo, la variabilidad de las tarifas según el tipo de cliente, el consumo y otros factores puede dificultar la toma de decisiones informadas. 
-        Este proyecto tiene como objetivo analizar las tarifas eléctricas de EPM en el área metropolitana entre 2016 y 2022, identificando patrones y tendencias que permitan optimizar el consumo energético. 
-        A través del desarrollo de una herramienta de visualización, se busca brindar información clara y accesible para que los usuarios comprendan sus costos y tomen decisiones más eficientes en el uso de la energía.
-        """)    
+    with Introduccion:
+        st.markdown("""
+            <h1 style="text-align: center; font-size: 36px;">Introducción</h1>
+            <p style="font-size: 20px; text-align: justify; margin-bottom: 50px;">
+            El costo de la energía eléctrica es un factor determinante en la planificación financiera de hogares y empresas. 
+            Sin embargo, la variabilidad de las tarifas según el tipo de cliente, el consumo y otros factores puede dificultar la toma de decisiones informadas. 
+            Este proyecto tiene como objetivo analizar las tarifas eléctricas de EPM en el área metropolitana entre 2016 y 2022, identificando patrones y tendencias que permitan optimizar el consumo energético. 
+            A través del desarrollo de una herramienta de visualización, se busca brindar información clara y accesible para que los usuarios comprendan sus costos y tomen decisiones más eficientes en el uso de la energía.
+            </p>
+        """, unsafe_allow_html=True)
 
-    elif menu == "Datos":
+        # Agregar espacio adicional
+        st.markdown("", unsafe_allow_html=True)
+
+        lottie_book = load_lottieurl("https://lottie.host/8acb477f-bcc4-4098-ab27-39a9a5cda7f1/Y7lK81s2RL.json")
+        st_lottie(lottie_book, speed=1, height=300, key="initial")    
+
+    with Datos:
         
         st.write("# Datos")
         
@@ -89,7 +104,7 @@ if sql_file:
     
     # filtered_data = df
     
-    elif menu == "Visualización":
+    with Visualizacion:
         st.subheader("📊 Visualización de Datos")
         # Agregar opción "Todos" a la lista de categorías
         categorias = ["Todos"] + list(df["Tipo de Dato"].unique())
