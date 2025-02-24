@@ -1,16 +1,11 @@
 import streamlit as st
 from streamlit_lottie import st_lottie
-from streamlit_extras.add_vertical_space import add_vertical_space
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
-from datetime import datetime
+import plotly.graph_objects as go
 import sqlite3
 import requests
-import altair as alt
-import os
+
 
 # URL del archivo SQL en GitHub (reemplaza con tu enlace)
 GITHUB_SQL_URL = "https://raw.githubusercontent.com/EduardoMG9906/Facturas_epm/refs/heads/main/proyecto.sql"
@@ -43,13 +38,7 @@ st.set_page_config(
 )
 
 st.title("📄 Proyecto Analisis de Facturas EPM")
-# st.sidebar.title("🔍 Paginas")
 
-# # 3. Implementación de la Barra de Navegación
-# menu = st.sidebar.radio(
-#     "",
-#     ["Introducción","Visualización", "Datos"]
-# )
 
 Introduccion, Visualizacion, Datos = st.tabs(["Introducción","Visualización", "Datos"])
 
@@ -69,6 +58,7 @@ if sql_file:
     # Obtener nombres de las tablas
     #tables = pd.read_sql("SELECT name FROM sqlite_master WHERE type='table'", conn)
     df = pd.read_sql(f"SELECT * FROM tarifas_epm_limpio", conn)
+    df_bienestar = pd.read_csv("df (1).csv")
     
     df['Año'] = df['Año'].astype(int)
     df["Rango de Consumo"] = df["Rango de Consumo"].replace('0-CS','Rango 0 - CS')
@@ -95,17 +85,22 @@ if sql_file:
         
         st.write("# Datos")
         
-        st.write(f"### 📊 Datos de la tabla `")        
+        st.write(f"### 📊 Datos de la tabla 'Facturas EPM 2016-2024'")        
         st.dataframe(df)
 
         # Opción para descargar los datos en CSV
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("📥 Descargar CSV", csv, "datos.csv", "text/csv")
-    
+        
+        df_bienestar = pd.read_csv("df (1).csv")
+        st.write(f"### 📊 Datos de la tabla `Indicador de Bienestar hasta 2021`")
+        st.dataframe(df_bienestar)
+        
+        df_bienestar_2024 = pd.read_csv("df_bienestar_2024.csv")
+        st.write(f"### 📊 Datos de la tabla `Indicador de Bienestar hasta 2024`")
+        st.dataframe(df_bienestar_2024)        
     # filtered_data = df
     
     with Visualizacion:
-        st.subheader("📊 Visualización de Datos")
+        
         # Agregar opción "Todos" a la lista de categorías
         categorias = ["Todos"] + list(df["Tipo de Dato"].unique())
         
@@ -122,14 +117,12 @@ if sql_file:
         
         st.write("## Gráficos")
         
-        col1, col2 = st.columns(2)
-        with col1: 
+        if st.button ("Gráfico de barras para el valor de la tarifa promedio por año"):
             st.write(f"### Gráfico de barras para el valor de la tarifa promedio por año para {categoria}")
 
             # Calcular el promedio por año
             df_mean = filtered_data.groupby("Año", as_index=False)["Compartido"].mean()
-            
-
+        
             # Crear el gráfico
             fig = px.box(
                 filtered_data, 
@@ -141,6 +134,7 @@ if sql_file:
             
             st.plotly_chart(fig)
 
+        if st.button ("Histograma energia con el paso de los años"):
             st.write(f"### Histograma para ver el comportamiento del valor de la energia por estrato y año para {categoria}")
 
             # Crear el gráfico de líneas con Plotly
@@ -154,7 +148,7 @@ if sql_file:
             )
             st.plotly_chart(fig_2)
         
-        with col2:
+        if st.button ("Grafico de dispersion de los rangos respecto al año"):
             st.write(f"### Gráfico de dispersión para los rangos del valor de la tarifa  por año para {categoria}")
             fig_3 = px.scatter(
                 filtered_data, 
@@ -166,6 +160,81 @@ if sql_file:
                 #labels={"Tipo de Dato": "Categoría", "Compartido": "Tarifa Promedio", "Año": "Año"}
             )
             st.plotly_chart(fig_3)
+        
+        
+            st.write("### Promedio de tarifa en los rangos de consumo de Punta y Fuera de Punta y Rango Monomia") 
+            df_avg = filtered_data[filtered_data['Rango de Consumo'].isin(['Punta', 'Fuera de Punta', 'Rango monomia'])].groupby('Rango de Consumo', as_index=False)['Compartido'].mean()
+            # Crear la figura
+            fig_4 = go.Figure()
+
+            # Agregar cada trazo a la gráfica
+            fig_4.add_trace(go.Bar(
+                x=df_avg['Rango de Consumo'], 
+                y=df_avg['Compartido'], 
+                name='Tarifa Promedio',
+                text=df_avg['Compartido'],  # Agregar los valores encima de las barras
+                textposition='auto',  # Posicionar el texto automáticamente sobre las barras
+                marker_color='blue'
+            ))
+
+            # Personalizar la gráfica
+            fig_4.update_layout(
+                title='Promedio de Tarifa Punta y Fuera de Punta',
+                xaxis_title='Tipo de Información',
+                yaxis_title='Tarifa Promedio',
+                legend_title='Variables',
+                template='plotly_white'
+            )
+
+            # Mostrar la gráfica
+            st.plotly_chart(fig_4)
+            
+        if st.button ("Indicador de Bienestar hasta el 2021"):
+            st.write("### Variacion del indicador de bienestar a lo largo del tiempo hasta 2021")
+            fig_3 = go.Figure()
+
+            # Agregar cada trazo a la gráfica
+            fig_3.add_trace(go.Scatter(x=df_bienestar['año'], y=df_bienestar['Variacion_Porcentual_IPC'], mode='lines+markers', name='Variación Porcentual IPC', marker=dict(symbol='circle')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar['año'], y=df_bienestar['variacion porcentual_Salario'], mode='lines+markers', name='Variación Porcentual Salario', marker=dict(symbol='square')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar['año'], y=df_bienestar['Variacion_Porcentual_Kw/h'], mode='lines+markers', name='Variación Porcentual Kw/h', marker=dict(symbol='x')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar['año'], y=df_bienestar['indicador_bienestar'], mode='lines+markers', name='Indicador de Bienestar', marker=dict(symbol='triangle-up')))
+
+            # Personalizar la gráfica
+            fig_3.update_layout(
+                title='Comparación de Variables a lo Largo del Tiempo',
+                xaxis_title='Año',
+                yaxis_title='Porcentaje de bienestar',
+                legend_title='Variables',
+                template='plotly_white'
+            )
+            # Mostrar la gráfica
+            st.plotly_chart(fig_3)
+        
+        
+            
+        if st.button ("Proyeccion de bienestar hasta 2024"):
+            st.write("### Variacion del indicador de bienestar a lo largo del tiempo hasta 2024")
+            st.write("# R^2 = 0.72")
+            fig_3 = go.Figure()
+
+            # Agregar cada trazo a la gráfica
+            fig_3.add_trace(go.Scatter(x=df_bienestar_2024['año'], y=df_bienestar_2024['Variacion_Porcentual_IPC'], mode='lines+markers', name='Variación Porcentual IPC', marker=dict(symbol='circle')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar_2024['año'], y=df_bienestar_2024['variacion_porcentual_Salario'], mode='lines+markers', name='Variación Porcentual Salario', marker=dict(symbol='square')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar['año'], y=df_bienestar['Variacion_Porcentual_Kw/h'], mode='lines+markers', name='Variación Porcentual Kw/h', marker=dict(symbol='x')))
+            fig_3.add_trace(go.Scatter(x=df_bienestar_2024['año'], y=df_bienestar_2024['indicador_bienestar'], mode='lines+markers', name='Indicador de Bienestar', marker=dict(symbol='triangle-up')))
+
+            # Personalizar la gráfica
+            fig_3.update_layout(
+                title='Comparación de Variables a lo Largo del Tiempo',
+                xaxis_title='Año',
+                yaxis_title='Porcentaje de bienestar',
+                legend_title='Variables',
+                template='plotly_white'
+            )
+            # Mostrar la gráfica
+            st.plotly_chart(fig_3)
+            
+
 
     conn.close()
 
